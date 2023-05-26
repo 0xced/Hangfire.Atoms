@@ -6,12 +6,12 @@ using Hangfire.Atoms.Tests.Web;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 
-var builder = WebApplication.CreateBuilder(args);
-var connectionString = Environment.GetEnvironmentVariable("Hangfire_PostgreSql_ConnectionString");
+using var container = new PostgresContainer("postgres:alpine");
 
+var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHangfire(configuration =>
 {
-    configuration.UsePostgreSqlStorage(connectionString);
+    configuration.UsePostgreSqlStorage(container.GetConnectionString());
     configuration.UsePostgreSqlMetrics();
     //configuration.UseRedisStorage("192.168.5.32");
     configuration.UseAtoms();
